@@ -115,7 +115,14 @@ Revision/Addition Description and Link:
 # Sabina B.
 
 * Initial Description and Link:
-
+  This vignette explores the Netflix Movies and TV Shows dataset from Kaggle using TidyVerse packages - primarily dplyr, ggplot2, and tidyr. It demonstrates how to clean, summarize, and visualize data to identify:
+    1. The top 10 countries producing Netflix movies
+    2. Yearly release trends
+    3. The most common genres
+  Links:
+    1. Kaggle Netflix Dataset: https://www.kaggle.com/datasets/shivamb/netflix-shows
+    2. TidyVerse Documentation: https://www.tidyverse.org/packages/
+    
 * Revision/Addition Description and Link:
 
 # Sachi K.
