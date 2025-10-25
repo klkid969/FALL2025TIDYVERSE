@@ -92,9 +92,13 @@ Functions used: getURL(), mutate(), arrange(), ggplot(), group_by(), summarise()
 # Mehreen Ali G.
 
 * Initial Description and Link:
+R file link: https://raw.githubusercontent.com/mehreengillani/FALL2025TIDYVERSE/refs/heads/main/Assignment10_Mehreen.Rmd
+Dataset link: https://raw.githubusercontent.com/mehreengillani/DATA607/refs/heads/main/NY-House-Dataset.csv
 
 * Revision/Addition Description and Link:
-
+* Beverage Preference Analysis: Identifies which drink dominates each country's alcohol consumption and finds countries where one beverage type makes up over 70% of total servings.
+Faceted Visualization: Provides a clearer comparison by showing the top countries for each beverage type separately, revealing different geographic patterns for beer, spirits, and wine consumption.
+https://github.com/sachikapoor99-byte/FALL2025TIDYVERSE/pull/1/commits/9368829e876990c13b556f270ab8cc9a8cb50dcd
 # Pascal Hermann K.
 
 * Initial Description and Link:
@@ -108,9 +112,10 @@ Functions used: getURL(), mutate(), arrange(), ggplot(), group_by(), summarise()
 * Revision/Addition Description and Link:
 
 # Pricilla N.
-
+filter(), mutate(), summarize(), group_by(), select(), and ggplot() 
 * Initial Description and Link:
-
+Https://github.com/prnakyazze94/Data_607/blob/main/TidyVerse%20EXTEND%20Assignment
+Practical, reproducible use cases of functions for data manipulation, transformation, and visualization.
 * Revision/Addition Description and Link:
 
 # Randy John H.
@@ -122,15 +127,26 @@ Functions used: getURL(), mutate(), arrange(), ggplot(), group_by(), summarise()
 # Sabina B.
 
 * Initial Description and Link:
-
+  This vignette explores the Netflix Movies and TV Shows dataset from Kaggle using TidyVerse packages - primarily dplyr, ggplot2, and tidyr. It demonstrates how to clean, summarize, and visualize data to identify:
+    1. The top 10 countries producing Netflix movies
+    2. Yearly release trends
+    3. The most common genres
+  Links:
+    1. Kaggle Netflix Dataset: https://www.kaggle.com/datasets/shivamb/netflix-shows
+    2. TidyVerse Documentation: https://www.tidyverse.org/packages/
+    
 * Revision/Addition Description and Link:
 
 # Sachi K.
 
 * Initial Description and Link:
+- Demonstrates `tidyr::pivot_longer()`, `dplyr` summaries, and a `ggplot2` stacked composition chart using FiveThirtyEight’s `drinks` dataset.
+- `vignettes/sachi_drinks_tidyr_dplyr.Rmd`
 
 * Revision/Addition Description and Link:
-
+- Adds `forcats` examples (`fct_reorder()` for sorted bars and `fct_lump_n()` to group small categories).
+- `vignettes/sachi_drinks_tidyr_dplyr.Rmd`
+- 
 # Taha M.
 
 * Initial Description and Link:

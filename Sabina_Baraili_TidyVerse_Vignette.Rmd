@@ -1,0 +1,153 @@
+---
+title: "Exploring Netflix Movies Dataset with TidyVerse"
+author: "Sabina Baraili"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+# Load required libraries
+library(tidyverse)
+library(readr)
+theme_set(theme_minimal())
+```
+
+# Introduction
+
+The purpose of this vignette is to demonstrate how to use **TidyVerse** packages - mainly **`dplyr`**, **`ggplot2`**, and **`tidyr`** - for data cleaning, manipulation, and visualization using a real-world dataset.
+
+We will explore the **Netflix Movies and TV Shows dataset** from Kaggle, which includes details such as title, type, country, release year, and genre.
+
+Dataset link: [Netflix Titles (Kaggle)](https://www.kaggle.com/datasets/shivamb/netflix-shows)
+
+---
+
+# Load and Inspect the Dataset
+
+```{r load-data}
+# Load dataset (make sure netflix_titles.csv is saved in your working directory)
+netflix <- read_csv("netflix_titles.csv")
+
+# View structure and sample data
+glimpse(netflix)
+head(netflix)
+```
+
+---
+
+# Clean and Prepare the Data
+
+We’ll filter only **Movies** and remove records with missing values in important columns like `release_year` and `country`.
+
+```{r clean-data}
+netflix_clean <- netflix %>%
+  filter(type == "Movie") %>%
+  drop_na(release_year, country)
+
+# Quick check of the cleaned data
+summary(netflix_clean)
+```
+
+---
+
+# Top Movie-Producing Countries
+
+Let’s find the **top 10 countries** that have produced the most Netflix movies using `dplyr::count()`.
+
+```{r summarize-country}
+top_countries <- netflix_clean %>%
+  count(country, sort = TRUE) %>%
+  head(10)
+
+top_countries
+```
+
+---
+
+# Visualization - Top 10 Countries by Movie Count
+
+We’ll visualize the results using a horizontal bar chart with `ggplot2`.
+
+```{r plot-country}
+ggplot(top_countries, aes(x = reorder(country, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Countries by Number of Netflix Movies",
+    x = "Country",
+    y = "Number of Movies"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Movie Release Trend Over the Years
+
+Here, we’ll analyze how Netflix movie releases have changed over time.
+
+```{r plot-year}
+movies_by_year <- netflix_clean %>%
+  group_by(release_year) %>%
+  summarise(total_movies = n())
+
+ggplot(movies_by_year, aes(release_year, total_movies)) +
+  geom_line(color = "tomato", linewidth = 1.1) +
+  geom_point(color = "darkred", size = 2) +
+  labs(
+    title = "Netflix Movie Releases Over the Years",
+    x = "Release Year",
+    y = "Number of Movies Released"
+  ) +
+  theme_light()
+```
+
+---
+
+# Most Common Genres on Netflix
+
+Each title can have multiple genres separated by commas.  
+We’ll use `tidyr::separate_rows()` to split them and count the most frequent genres.
+
+```{r genre-analysis}
+genre_data <- netflix_clean %>%
+  separate_rows(listed_in, sep = ", ") %>%
+  count(listed_in, sort = TRUE) %>%
+  head(10)
+
+genre_data
+```
+
+```{r plot-genre}
+ggplot(genre_data, aes(x = reorder(listed_in, n), y = n)) +
+  geom_col(fill = "orchid") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Most Common Netflix Genres",
+    x = "Genre",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Summary
+
+This vignette demonstrates how to:
+- Use **`dplyr`** for data manipulation (`filter`, `count`, `group_by`, `summarise`).
+- Use **`tidyr`** to reshape data with `separate_rows`.
+- Use **`ggplot2`** to visualize results in bar and line charts.
+
+---
+
+# References
+
+- Kaggle Netflix Dataset: <https://www.kaggle.com/datasets/shivamb/netflix-shows>  
+- TidyVerse Documentation: <https://www.tidyverse.org/packages/>
