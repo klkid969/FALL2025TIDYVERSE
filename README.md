@@ -55,8 +55,15 @@ Revision/Addition Description and Link:
 # James C.
 
 * Initial Description and Link:
+Video game sales from 
+
+https://www.kaggle.com/datasets/sidtwr/videogames-sales-dataset/data
+
+Using primarily PS4 and Xbox One Game Sales
 
 * Revision/Addition Description and Link:
+
+Functions used: getURL(), mutate(), arrange(), ggplot(), group_by(), summarise()
 
 # Joao D.
 

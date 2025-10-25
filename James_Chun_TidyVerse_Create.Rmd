@@ -1,0 +1,135 @@
+---
+title: "TidyVerse Create"
+author: "James Chun"
+date: "October 25, 2025"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Here I will be working with two Kaggle datasets sourced from https://www.kaggle.com/datasets/sidtwr/videogames-sales-dataset/data 
+<br> 
+<br>
+The two datasets contains information for the highest video game sales from the 2010's for the PS4 and Xbox One. The data also contains the publisher, genre, date released, and the sales for various counts (in units per million). 
+
+
+## Load Libraries
+```{r message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(RCurl)
+```
+
+
+## Import Data
+Data will be stored in an external github and accessed virtually. Note again that the units for the sales per country are in millions of copies sold.
+
+```{r}
+PS4_sales <- getURL("https://media.githubusercontent.com/media/Ryungje/DATA607/refs/heads/main/TidyVerse%20Create%20Project/PS4_GamesSales.csv") %>%
+  read.csv(text = .)
+
+XboxOne_sales <- getURL("https://media.githubusercontent.com/media/Ryungje/DATA607/refs/heads/main/TidyVerse%20Create%20Project/XboxOne_GameSales.csv") %>%
+  read.csv(text = .)
+  
+```
+
+## Data Tidying
+For the most part, the datasets are "tidy" and not much work is needed. However, I will edit the sales columns to be in millions rather than a unit rate. This will be done using the mutate() function.
+
+```{r}
+PS4_sales <- PS4_sales %>%
+  mutate(North.America = North.America * 1000000, 
+         Europe = Europe * 1000000,
+         Japan = Japan * 1000000,
+         Rest.of.World = Rest.of.World * 1000000,
+         Global = Global * 1000000)
+
+
+XboxOne_sales <- XboxOne_sales %>%
+  mutate(North.America = North.America * 1000000, 
+         Europe = Europe * 1000000,
+         Japan = Japan * 1000000,
+         Rest.of.World = Rest.of.World * 1000000,
+         Global = Global * 1000000)
+```
+
+## Exploratory Data Analysis
+First, sort the datasets for highest sales globally and observe the head.
+
+```{r}
+XboxOne_sales %>%
+  arrange(desc(Global)) %>% 
+  head()
+```
+From this we can see that for the Xbox One, GTA V holds the highest global sales, followed by CoD Black Ops 3, CoD WWII and Red Dead Redemption 2. 
+
+```{r}
+PS4_sales %>%
+  arrange(desc(Global)) %>% 
+  head()
+```
+Meanwhile, for the PS4, the same is mostly true except Red Dead Redemption 2 takes the third spot from CoD WWII.
+
+### Graphs 
+Simple visuals created using graphing functions from ggplot2.
+
+```{r}
+XboxOne_sales %>%
+  # Count top 5 sales by publisher
+  group_by(Publisher) %>%
+  summarise(total_sales = sum(Global, na.rm = TRUE)) %>%
+  arrange(desc(total_sales)) %>%
+  head(5) %>%
+  
+  # Make plot
+  ggplot(aes(x = reorder(Publisher, total_sales), y = total_sales)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  
+  # Customize plot
+  labs(
+    title = "Top Publishers by Global Sales for Xbox One",
+    x = "Publisher",
+    y = "Total Sales"
+  ) +
+  scale_y_continuous(labels = function(x) paste0(x / 1e6, "M")) +
+  theme_minimal()
+```
+
+
+```{r}
+PS4_sales %>%
+  # Count top 5 sales by publisher
+  group_by(Publisher) %>%
+  summarise(total_sales = sum(Global, na.rm = TRUE)) %>%
+  arrange(desc(total_sales)) %>%
+  head(5) %>%
+  
+  # Make plot
+  ggplot(aes(x = reorder(Publisher, total_sales), y = total_sales)) +
+  geom_bar(stat = "identity", fill = "tomato") +
+  coord_flip() +
+  
+  # Customize plot
+  labs(
+    title = "Top Publishers by Global Sales for PS4",
+    x = "Publisher",
+    y = "Total Sales"
+  ) +
+  scale_y_continuous(labels = function(x) paste0(x / 1e6, "M")) +
+  theme_minimal()
+```
+Again, the data for the two consoles appear to be similar. However, Sony Interactive makes a notable contribution to global sales for the PS4 console. This is interesting and could be the result of Sony exclusives on the PS4: another motivation for people to buy the PS4.
+
+## Summary
+
+In this vignette, we explored some basic data tidying and analysis using the libraries and functions:
+<br>
+- ***tidyverse*** for data tidying (summarise, group_by, arrange, mutate).  
+- ***RCurl*** to import data (getURL).  
+- ***ggplot2*** to visualize data (ggplot).  
+
