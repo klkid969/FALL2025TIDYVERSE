@@ -1,0 +1,107 @@
+---
+title: "Tidyverse CREATE — dplyr on mpg (Teaching Vignette)"
+author: "Kevin Martin"
+date: "10-26-2025"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## What this vignette teaches (in plain English)
+
+We’ll use **one tidyverse package** — `dplyr` — on a built-in dataset called **`mpg`** (car fuel economy).  
+The goal is to show a simple, readable **data workflow**:
+
+**peek → create a new column → group → summarize → sort → show top 5 → (plot)**
+
+---
+
+## Packages
+
+```{r install}
+# install.packages(c("dplyr","ggplot2"))  # run once if needed
+library(dplyr)     # tidyverse data manipulation
+library(ggplot2)   # provides the built-in mpg dataset (and plotting)
+```
+---
+
+## What dataset is this?
+
+`mpg` comes with ggplot2 and has one row per car model with city (`cty`) and highway (`hwy`) MPG, plus the car **manufacturer**, **model**, **class**, etc.
+
+```{r peek}
+# Built-in dataset; no download needed
+glimpse(mpg)
+```
+
+**Why this dataset?** No downloads, no cleaning — perfect for a tiny teaching demo.
+
+---
+
+## The dplyr pipeline (one screen, well-commented)
+
+**Question:** *Which car manufacturers have the highest average fuel efficiency in this dataset?*
+
+
+# Create a simple efficiency score and find the top 5 manufacturers
+
+```{r pipeline}
+mpg_summary <- mpg %>%
+  mutate(
+    # A simple efficiency score: average of city & highway MPG
+    efficiency = (cty + hwy) / 2
+  ) %>%
+  group_by(manufacturer) %>%
+  summarize(
+    avg_eff = mean(efficiency, na.rm = TRUE),      # average efficiency for each brand
+    n = n()                                        # number of observations per manufacturer
+  ) %>%
+  arrange(desc(avg_eff)) %>%                       # sort from most to least efficient
+  slice_head(n = 5)                                # show just the top 5 brands
+
+mpg_summary
+```
+
+**What each verb does (quickly):**
+
+- `mutate()` → makes a **new column** (`efficiency`) from existing ones  
+- `group_by()` + `summarize()` → calculates **per-group** statistics  
+- `arrange()` → sorts rows  
+- `slice_head(n = 5)` → keeps the **top 5** rows  
+
+---
+
+## A quick visual (bar chart)
+
+```{r visual}
+ggplot(mpg_summary, aes(x = reorder(manufacturer, avg_eff), y = avg_eff)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Top 5 Manufacturers by Average Efficiency (mpg dataset)",
+    x = "Manufacturer",
+    y = "Average Efficiency (simple avg of city & highway MPG)"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+**How to read it:** Bars higher up = higher average fuel efficiency among the models that brand has in this dataset.
+
+---
+
+## One-paragraph takeaway
+
+We looked at the `mpg` data and built a tiny analysis with `dplyr`.  
+First, we **peeked** at the columns; then we **created** a simple mileage score by averaging city and highway MPG. Next, we **grouped** by manufacturer and **summarized** the average score per brand, then **sorted** and kept the **top 5**. The table and bar chart show which brands’ models are most fuel-efficient **in this dataset** (not a universal ranking, just what’s in `mpg`). This demonstrates the core dplyr flow you’ll use everywhere: **mutate → group_by → summarize → arrange**.
+
+---
+
+## (Optional) Next steps I could try
+
+- Compare by `class` (e.g., compact vs. suv)  
+- Use `filter()` to focus on recent model years (`year`)  
+- Add a second plot with error bars (variation per brand)
+
+---
